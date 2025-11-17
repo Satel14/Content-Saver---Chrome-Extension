@@ -70,11 +70,3 @@ A powerful Chrome extension for saving and organizing web page content with adva
 ├── styles.css          # Styling
 └── icons/              # Extension icons
 ```
-
-## 📝 License
-
-MIT License - feel free to use and modify.
-
-## 🤝 Contributing
-
-Contributions welcome! Open an issue or submit a pull request.
