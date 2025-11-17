@@ -37,6 +37,24 @@ A powerful Chrome extension for saving and organizing web page content with adva
 - **Favorite**: Click star icon to mark favorites
 - **Export**: Export all data as JSON or CSV
 
+## 📸 Screenshots
+
+### Entries Tab
+![Entries](screenshots/Entries.png)
+View and manage all your saved content with powerful search and filter options.
+
+### Favorites Tab
+![Favorites](screenshots/Favorite.png)
+Quick access to your starred entries for important content.
+
+### Statistics Tab
+![Statistics](screenshots/Stats.png)
+Analytics dashboard showing insights about your saved content and usage patterns.
+
+### Categories Tab
+![Categories](screenshots/Catogories.png)
+Organize your content with custom categories and tags for better management.
+
 ## 🎯 Key Features
 
 ### Tabs
