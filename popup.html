@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Saver</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📦 Content Saver</h1>
+      <div class="header-actions">
+        <button id="saveCurrentPage" class="btn btn-primary">Save Page</button>
+        <button id="themeToggle" class="btn btn-icon" title="Toggle theme">🌓</button>
+        <button id="settingsBtn" class="btn btn-icon" title="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="entries">Entries</button>
+      <button class="tab-btn" data-tab="favorites">Favorites</button>
+      <button class="tab-btn" data-tab="statistics">Stats</button>
+      <button class="tab-btn" data-tab="categories">Categories</button>
+    </nav>
+
+    <div class="tab-content active" id="tab-entries">
+      <div class="controls">
+        <div class="search-wrapper">
+          <input type="text" id="searchInput" placeholder="Search..." aria-label="Search">
+          <button id="filterBtn" class="btn btn-icon" title="Filters">🔍</button>
+        </div>
+        <div class="control-buttons">
+          <button id="sortBtn" class="btn btn-secondary" title="Sort">Sort</button>
+          <button id="exportBtn" class="btn btn-secondary" title="Export">Export</button>
+          <button id="importBtn" class="btn btn-secondary" title="Import">Import</button>
+        </div>
+      </div>
+
+      <div id="filterPanel" class="filter-panel hidden">
+        <select id="filterType">
+          <option value="">All Types</option>
+          <option value="page">Pages</option>
+          <option value="selection">Selections</option>
+        </select>
+        <select id="filterCategory">
+          <option value="">All Categories</option>
+        </select>
+        <select id="filterDate">
+          <option value="">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+        </select>
+        <input type="text" id="filterDomain" placeholder="Domain filter">
+        <button id="clearFilters" class="btn btn-small">Clear</button>
+      </div>
+
+      <div id="contentList" class="content-list" role="list"></div>
+    </div>
+
+    <div class="tab-content" id="tab-favorites">
+      <div id="favoritesList" class="content-list"></div>
+    </div>
+
+    <div class="tab-content" id="tab-statistics">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total Entries</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statPages">0</div>
+          <div class="stat-label">Pages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statSelections">0</div>
+          <div class="stat-label">Selections</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statFavorites">0</div>
+          <div class="stat-label">Favorites</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statCategories">0</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statStorage">0 KB</div>
+          <div class="stat-label">Storage Used</div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h3>Entries by Domain</h3>
+        <div id="domainChart" class="chart"></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-categories">
+      <div class="categories-container">
+        <div class="category-input-wrapper">
+          <input type="text" id="newCategoryInput" placeholder="Add new category...">
+          <button id="addCategoryBtn" class="btn btn-primary">Add</button>
+        </div>
+        <div id="categoriesList" class="categories-list"></div>
+      </div>
+    </div>
+
+    <div id="settingsPanel" class="settings-panel hidden">
+      <h3>Settings</h3>
+      <div class="setting-item">
+        <label>Max Entries</label>
+        <input type="number" id="maxEntries" min="10" max="1000" value="100">
+      </div>
+      <div class="setting-item">
+        <label>Auto-save on page load</label>
+        <input type="checkbox" id="autoSave">
+      </div>
+      <div class="setting-item">
+        <label>Dark Theme</label>
+        <input type="checkbox" id="darkTheme">
+      </div>
+      <div class="setting-item">
+        <label>Date Format</label>
+        <select id="dateFormat">
+          <option value="en-US">US Format</option>
+          <option value="en-GB">UK Format</option>
+          <option value="de-DE">German Format</option>
+        </select>
+      </div>
+      <button id="saveSettings" class="btn btn-primary">Save Settings</button>
+      <button id="resetSettings" class="btn btn-danger">Reset to Defaults</button>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept=".json,.csv" style="display: none;">
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Icon Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 10px;
+      display: block;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chrome Extension Icon Generator</h1>
+    <p>Click the button below to generate icons in different sizes.</p>
+    
+    <canvas id="icon16" width="16" height="16"></canvas>
+    <canvas id="icon48" width="48" height="48"></canvas>
+    <canvas id="icon128" width="128" height="128"></canvas>
+    
+    <div>
+      <button onclick="generateIcons()">Generate Icons</button>
+      <button onclick="downloadAll()">Download All</button>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#667eea');
+      gradient.addColorStop(1, '#764ba2');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.beginPath();
+      const radius = size * 0.15;
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.globalCompositeOperation = 'source-over';
+      
+      const docSize = size * 0.6;
+      const docX = size * 0.2;
+      const docY = size * 0.25;
+      ctx.fillStyle = 'white';
+      ctx.fillRect(docX, docY, docSize, docSize * 0.8);
+      ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+      const lineHeight = docSize * 0.15;
+      for (let i = 0; i < 4; i++) {
+        const y = docY + lineHeight * (i + 1) + i * 2;
+        const width = docSize * (0.7 - i * 0.1);
+        ctx.fillRect(docX + (docSize - width) / 2, y, width, lineHeight * 0.3);
+      }
+      
+      if (size >= 48) {
+        const checkSize = size * 0.25;
+        const checkX = size * 0.7;
+        const checkY = size * 0.15;
+        ctx.strokeStyle = '#4CAF50';
+        ctx.fillStyle = '#4CAF50';
+        ctx.beginPath();
+        ctx.arc(checkX, checkY, checkSize / 2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = size * 0.03;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(checkX - checkSize * 0.25, checkY);
+        ctx.lineTo(checkX - checkSize * 0.05, checkY + checkSize * 0.2);
+        ctx.lineTo(checkX + checkSize * 0.3, checkY - checkSize * 0.15);
+        ctx.stroke();
+      }
+    }
+    
+    function generateIcons() {
+      drawIcon(document.getElementById('icon16'), 16);
+      drawIcon(document.getElementById('icon48'), 48);
+      drawIcon(document.getElementById('icon128'), 128);
+    }
+    
+    function downloadCanvas(canvas, filename) {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+    
+    function downloadAll() {
+      generateIcons();
+      setTimeout(() => {
+        downloadCanvas(document.getElementById('icon16'), 'icon16.png');
+        setTimeout(() => {
+          downloadCanvas(document.getElementById('icon48'), 'icon48.png');
+          setTimeout(() => {
+            downloadCanvas(document.getElementById('icon128'), 'icon128.png');
+          }, 200);
+        }, 200);
+      }, 200);
+    }
+    
+    window.onload = generateIcons;
+  </script>
+</body>
+</html>
+
