@@ -52,6 +52,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       await handleSavePageContent(tab);
     } else if (info.menuItemId === 'saveSelection') {
       const selectionText = info.selectionText || '';
+      console.log('Selection text from context menu:', selectionText);
+      if (!selectionText || selectionText.trim().length === 0) {
+        console.error('No selection text found in info.selectionText');
+        return;
+      }
       await handleSaveSelection(tab, selectionText);
     }
   } catch (error) {
@@ -89,25 +94,52 @@ async function handleSavePageContent(tab) {
 }
 
 async function handleSaveSelection(tab, selectionText) {
-  return new Promise((resolve, reject) => {
-    if (!tab?.id) {
-      reject(new Error('Invalid tab'));
-      return;
+  if (!selectionText || !selectionText.trim()) {
+    console.error('No selection text provided');
+    return;
+  }
+
+  const trimmedText = selectionText.trim();
+  console.log('Saving selection, length:', trimmedText.length, 'preview:', trimmedText.substring(0, 50));
+
+  try {
+    const url = tab.url || tab.pendingUrl || '';
+    let domain = '';
+    let path = '';
+
+    try {
+      if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+        const urlObj = new URL(url);
+        domain = urlObj.hostname;
+        path = urlObj.pathname;
+      }
+    } catch (e) {
+      console.warn('Could not parse URL:', url);
     }
 
-    chrome.tabs.sendMessage(
-      tab.id,
-      { action: 'saveSelection', selectionText: selectionText },
-      (response) => {
-        if (chrome.runtime.lastError) {
-          console.error('Error sending message to content script:', chrome.runtime.lastError);
-          reject(chrome.runtime.lastError);
-          return;
-        }
-        resolve(response);
+    const content = {
+      url: url,
+      title: tab.title || 'Untitled',
+      timestamp: new Date().toISOString(),
+      type: 'selection',
+      text: trimmedText,
+      metadata: {
+        domain: domain,
+        path: path
       }
-    );
-  });
+    };
+
+    console.log('Content to save:', { 
+      type: content.type, 
+      textLength: content.text.length,
+      textPreview: content.text.substring(0, 100)
+    });
+
+    await saveContent(content);
+    console.log('Selection saved successfully');
+  } catch (error) {
+    console.error('Error saving selection:', error);
+  }
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
